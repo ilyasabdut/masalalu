@@ -11,10 +11,29 @@
 |
 */
 
-Route::get('/', function () {
-    return view('import');
+
+
+
+
+
+
+
+
+
+Route::get('auth/login', 'PublicController@showLogin');
+Route::post('auth/login', 'Auth\LoginController@authenticate');
+
+Route::group(['middleware' => ['auth']], function() {
+	Route::get('/', 'ImportExportController@importexport');
+  	Route::get('/exportmenu', 'ImportExportController@menuExport');
+    Route::post('/importmenu', 'ImportExportController@menuImport');
+
+
+	Route::get('/logout', function(){
+        Auth::logout();
+        return redirect('/auth/login');
+	});
+
 });
 
-Route::get('/import', function(){
-	return view('import');
-});
+
